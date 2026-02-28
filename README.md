@@ -1,18 +1,21 @@
 # Grocery List Manager - Backend
 
 ## Project Overview
-Node.js + Express API for grocery management, pantry inventory, budget analytics support, and purchase history persistence on Supabase.
+Node.js + Express backend API for the Smart Grocery List Manager. It handles secure CRUD operations for grocery items, pantry inventory, purchase history, product catalog, and monthly analytics using Supabase.
 
 ## Tech Stack
 - Node.js
 - Express.js
 - Supabase (Postgres + Auth)
 
-## Structure
-`src/config`, `src/middleware`, `src/routes`, `src/utils`
+## API Documentation
+Base URL:
+- `https://grocery-list-manager-backend-fhhh.onrender.com`
 
-## API Endpoints
+Health:
 - `GET /health`
+
+Authenticated routes (Bearer token required):
 - `GET /api/grocery-items`
 - `POST /api/grocery-items`
 - `PATCH /api/grocery-items/:id`
@@ -26,34 +29,37 @@ Node.js + Express API for grocery management, pantry inventory, budget analytics
 - `GET /api/analytics/monthly-summary`
 - `GET /api/products`
 
-## Authentication
-All `/api/*` routes require `Authorization: Bearer <supabase_access_token>`.
+## Database Schema Explanation
+Schema file:
+- `supabase/schema.sql`
 
-## Database Schema
-Schema file: `../supabase/schema.sql`
-- `grocery_items`
-- `pantry`
-- `purchase_history`
-- `products`
+Main tables:
+- `grocery_items`: user-wise grocery list items (`user_id`, `name`, `category`, `quantity`, `price`)
+- `pantry`: user pantry inventory (`user_id`, `item_name`, `quantity`, `expiry_date`)
+- `purchase_history`: finalized purchase records (`user_id`, `total_amount`, `purchase_date`, `items_snapshot`)
+- `products`: product catalog for suggestions (`name`, `category`, `price`, `store`, `brand`)
 
-## Installation
+Data security:
+- Supabase Row Level Security policies are used
+- API validates user via Bearer token and filters by `user_id`
+
+## Installation Steps
 1. Install dependencies:
 ```bash
 npm install
 ```
-2. Set env vars:
+2. Create `.env` and set:
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `FRONTEND_ORIGIN`
 - `PORT=4000`
-3. Run:
+3. Run locally:
 ```bash
-npm run dev:server
+npm run server
 ```
 
-## Deployment (Render)
-- Build command: `npm ci`
-- Start command: `npm run server`
-- Health endpoint: `/health`
+## Deployment Link
+- Render Backend: `https://grocery-list-manager-backend-fhhh.onrender.com`
+- Health Check: `https://grocery-list-manager-backend-fhhh.onrender.com/health`
 
