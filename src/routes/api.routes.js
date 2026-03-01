@@ -2,6 +2,7 @@ import { Router } from "express";
 import { requireUser } from "../middleware/requireUser.js";
 import { supabaseAdmin } from "../config/supabase.js";
 import { monthlyTotal, toMonthBounds } from "../utils/date.js";
+import { enrichPantryItem } from "../utils/pantry.js";
 
 export const apiRouter = Router();
 
@@ -148,7 +149,7 @@ apiRouter.get("/pantry", async (req, res) => {
     return;
   }
 
-  res.json(data);
+  res.json((data ?? []).map(enrichPantryItem));
 });
 
 apiRouter.post("/pantry", async (req, res) => {
@@ -192,7 +193,7 @@ apiRouter.post("/pantry", async (req, res) => {
       return;
     }
 
-    res.status(200).json({ ...data, merged_duplicate: true });
+    res.status(200).json({ ...enrichPantryItem(data), merged_duplicate: true });
     return;
   }
 
@@ -212,7 +213,7 @@ apiRouter.post("/pantry", async (req, res) => {
     return;
   }
 
-  res.status(201).json(data);
+  res.status(201).json(enrichPantryItem(data));
 });
 
 apiRouter.patch("/pantry/:id", async (req, res) => {
@@ -234,7 +235,7 @@ apiRouter.patch("/pantry/:id", async (req, res) => {
     return;
   }
 
-  res.json(data);
+  res.json(enrichPantryItem(data));
 });
 
 apiRouter.delete("/pantry/:id", async (req, res) => {
